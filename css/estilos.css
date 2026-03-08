@@ -44,3 +44,39 @@ footer {
     padding: 10px;
     color: #777;
 }
+
+/* Contenedor para el login */
+.login-container {
+    width: 300px;
+    margin: 80px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* TITULO */
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* FORMULARIO */
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* INPUTS */
+.login-container input {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+/* BOTON */
+.login-container input[type="submit"] {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

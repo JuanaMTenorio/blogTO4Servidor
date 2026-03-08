@@ -14,6 +14,7 @@ class Usuario
     private $email;
     private $password;
     private $imagen_avatar;
+    private $rol;
 
     //ATRIBUTOS PARA GUARDAR LA CONEXIÓN A LA BASE DE DATOS
     private $conn;
@@ -86,12 +87,21 @@ class Usuario
     {
         $this->imagen_avatar = $imagen_avatar;
     }
+    public function getRol()
+    {
+        return $this->rol;
+    }
+    public function setRol($rol)
+    {
+        $this->rol = $rol;
+    }
 
     //METODO PARA INSERTAR/GUARDA UN USUARIO EN LA BD
-    public function guardar(){
+    public function guardar()
+    {
         //CREO LA CONSULTA SQL CON MARCADORES DE POSICION(?)
         //ASI EVITO INYECCION SQL MALA
-        $sql = "INSERT INTO usuarios(nick,nombre,apellidos,email,password, VALUES(?,?,?,?,?,?)";
+        $sql = "INSERT INTO usuarios(nick,nombre,apellidos,email,password, rol VALUES(?,?,?,?,?,?,?)";
         //PREPARO LA CONSULTA
         $stmt = $this->conn->prepare($sql);
         //EJECUTO LA CONSULTA Y PASO LOS VALORES EN EL MISMO ORDEN
@@ -101,9 +111,32 @@ class Usuario
             $this->apellidos,
             $this->email,
             $this->password,
-            $this->imagen_avatar
+            $this->imagen_avatar,
+            $this->rol
         ]);
         //Devuelvo true o false según hata ido bien o no
         return $resultado;
+    }
+
+    // MÉTODO login()
+    //Este método comprueba si el usuario existe en la base de datos
+    //Si existe devuelve true y si no, false.
+    //usando el email y la contraseña
+    public function login()
+    {
+        //Consulta SQL para buscar el usuario
+        $sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
+
+        //Preparamos la consulta
+        $stmt = $this->conn->prepare($sql);
+
+        //Ejecutamos la consulta pasando los valores
+        $stmt->execute([
+            $this->email,
+            $this->password
+        ]);
+
+        //Si encuentra usuario devolverá sus datos
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
