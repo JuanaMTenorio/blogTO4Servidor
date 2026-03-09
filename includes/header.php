@@ -13,6 +13,6 @@
         <h1>MI BLOG</h1>
     </header>
     <nav>
-        <a href="index.php">Inicio</a>
+        <a href="index.php">Salir</a>
     </nav>
     <main>

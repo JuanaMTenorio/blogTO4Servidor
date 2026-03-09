@@ -12,15 +12,19 @@
 
     <?php foreach ($entradas as $entrada): ?>
         <tr>
-            <td><?php echo $entrada['titulo']; ?></td>
-            <td><?php echo $entrada['categoria_id']; ?></td>
-            <td><?php echo $entrada['imagen']; ?></td>
-            <td><?php echo $entrada['descripcion']; ?></td>
-            <td><?php echo $entrada['fecha']; ?></td>
+            <td><?php echo htmlspecialchars($entrada['titulo'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($entrada['categoria_nombre'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($entrada['imagen'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($entrada['descripcion'] ?? ''); ?></td>
+            <td><?php echo htmlspecialchars($entrada['fecha'] ?? ''); ?></td>
             <td>
-                <a href="panel.php?controller=entrada&action=editar&id=<?php echo $entrada['id']; ?>">Editar</a>
-                <a href="panel.php?controller=entrada&action=eliminar&id=<?php echo $entrada['id']; ?>"
-                    onclick="return confirm('¿Seguro que quieres eliminar esta entrada?');">Eliminar</a>
+                <?php if ($_SESSION['rol'] == 'admin' || $_SESSION['usuario'] == $entrada['usuario_id']): ?>
+                    <a href="panel.php?controller=entrada&action=editar&id=<?php echo $entrada['id']; ?>">Editar</a>
+
+                    <a href="panel.php?controller=entrada&action=eliminar&id=<?php echo $entrada['id']; ?>"
+                       onclick="return confirm('¿Seguro que quieres eliminar esta entrada?');">Eliminar</a>
+                <?php endif; ?>
+
                 <a href="panel.php?controller=entrada&action=detalle&id=<?php echo $entrada['id']; ?>">Detalle</a>
             </td>
         </tr>

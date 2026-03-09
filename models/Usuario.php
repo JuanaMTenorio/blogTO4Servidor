@@ -140,4 +140,25 @@ class Usuario
         //Si encuentra usuario devolverá sus datos
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    //METODO obtenerTodos()
+    public function obtenerTodos()
+    {
+        $sql = "SELECT * FROM usuarios ORDER BY id ASC";
+
+        $stmt = $this->conn->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    //METODO obtenerPorId()
+    public function obtenerPorId()
+    {
+        $sql = "SELECT * FROM usuarios WHERE id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$this->id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

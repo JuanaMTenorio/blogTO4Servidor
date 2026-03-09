@@ -16,6 +16,7 @@ include "includes/header.php";
     <table border="1" cellpadding="5">
         <tr>
             <th><a href="panel.php?controller=usuario&action=crear">Crear usuario</a></th>
+            <th><a href="panel.php?controller=usuario&action=listar">Listar usuarios</a></th>
             <th><a href="panel.php?controller=categoria&action=crear">Crear categoría</a></th>
             <th><a href="panel.php?controller=entrada&action=crear">Crear entrada</a></th>
             <th><a href="logout.php">Cerrar sesión</a></th>

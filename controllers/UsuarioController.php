@@ -79,4 +79,27 @@ class UsuarioController
             }
         }
     }
+
+    public function listar()
+    {
+        $usuario = new Usuario();
+        $usuarios = $usuario->obtenerTodos();
+
+        require_once __DIR__ . "/../views/usuarios/listar.php";
+    }
+
+    public function detalle()
+    {
+        if (isset($_GET['id'])) {
+
+            $id = $_GET['id'];
+
+            $usuario = new Usuario();
+            $usuario->setId($id);
+
+            $datosUsuario = $usuario->obtenerPorId();
+
+            require_once __DIR__ . "/../views/usuarios/detalle.php";
+        }
+    }
 }

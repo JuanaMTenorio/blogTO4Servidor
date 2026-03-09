@@ -62,6 +62,7 @@ class EntradaController
 
         require_once __DIR__ . "/../views/entradas/listar.php";
     }
+    
     //METODO EDITAR
     public function editar()
     {
@@ -73,6 +74,17 @@ class EntradaController
             $entrada->setId($id);
 
             $datosEntrada = $entrada->obtenerPorId();
+
+            if (!$datosEntrada) {
+                echo "Entrada no encontrada";
+                exit();
+            }
+
+            //CONTROL DE PERMISOS
+            if ($_SESSION['rol'] != 'admin' && $datosEntrada['usuario_id'] != $_SESSION['usuario']) {
+                echo "No tienes permiso para editar esta entrada";
+                exit();
+            }
 
             $categoria = new Categoria();
             $categorias = $categoria->obtenerTodas();
@@ -91,9 +103,23 @@ class EntradaController
             $imagen = trim($_POST['imagen'] ?? '');
             $descripcion = trim($_POST['descripcion'] ?? '');
 
+            //COMPROBAR DE QUIÉN ES LA ENTRADA
             $entrada = new Entrada();
-
             $entrada->setId($id);
+
+            $datosEntrada = $entrada->obtenerPorId();
+
+            if (!$datosEntrada) {
+                echo "Entrada no encontrada";
+                exit();
+            }
+
+            //CONTROL DE PERMISOS
+            if ($_SESSION['rol'] != 'admin' && $datosEntrada['usuario_id'] != $_SESSION['usuario']) {
+                echo "No tienes permiso para actualizar esta entrada";
+                exit();
+            }
+
             $entrada->setCategoriaId($categoria_id);
             $entrada->setTitulo(htmlspecialchars($titulo));
             $entrada->setImagen(htmlspecialchars($imagen));
@@ -134,6 +160,19 @@ class EntradaController
 
             $entrada = new Entrada();
             $entrada->setId($id);
+
+            $datosEntrada = $entrada->obtenerPorId();
+
+            if (!$datosEntrada) {
+                echo "Entrada no encontrada";
+                exit();
+            }
+
+            //CONTROL DE PERMISOS
+            if ($_SESSION['rol'] != 'admin' && $datosEntrada['usuario_id'] != $_SESSION['usuario']) {
+                echo "No tienes permiso para eliminar esta entrada";
+                exit();
+            }
 
             $resultado = $entrada->eliminar();
 

@@ -116,8 +116,17 @@ class Entrada
     public function obtenerTodas()
     {
         //Consulta SQL
-        $sql = "SELECT * FROM entradas ORDER BY fecha DESC";
-
+        $sql = "SELECT 
+                entradas.id,
+                entradas.usuario_id,
+                entradas.titulo,
+                entradas.imagen,
+                entradas.descripcion,
+                entradas.fecha,
+                categorias.nombre AS categoria_nombre
+            FROM entradas
+            INNER JOIN categorias ON entradas.categoria_id = categorias.id
+            ORDER BY entradas.fecha DESC";
         //Ejecutamos la consulta
         $stmt = $this->conn->query($sql);
 
