@@ -1,10 +1,11 @@
 <?php
 
 //Incluiyo la conexión PDO
-require_once "config/Database.php";
+require_once __DIR__ . "/../config/Database.php";
 
 //Creo la clase Entrada
-class Entrada{
+class Entrada
+{
     //ATRIBUTOS PRIVADOS
     //Representan las columnas de la tabla entradas
     private $id;
@@ -136,9 +137,28 @@ class Entrada{
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    //MÉTODO ACTUALIZAR DESPUÉS DE EDITAR
+    public function actualizar()
+    {
+        $sql = "UPDATE entradas
+            SET categoria_id = ?, titulo = ?, imagen = ?, descripcion = ?
+            WHERE id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            $this->categoria_id,
+            $this->titulo,
+            $this->imagen,
+            $this->descripcion,
+            $this->id
+        ]);
+    }
+
 
     // MÉTODO eliminar()
     //Elimina una entrada del blog
+
     public function eliminar()
     {
         $sql = "DELETE FROM entradas WHERE id = ?";
@@ -146,5 +166,27 @@ class Entrada{
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([$this->id]);
+    }
+
+    //METODO obtenerDetalle()
+    public function obtenerDetalle()
+    {
+        $sql = "SELECT 
+                entradas.id,
+                entradas.titulo,
+                entradas.imagen,
+                entradas.descripcion,
+                entradas.fecha,
+                categorias.nombre AS categoria_nombre,
+                usuarios.nick AS autor
+            FROM entradas
+            INNER JOIN categorias ON entradas.categoria_id = categorias.id
+            INNER JOIN usuarios ON entradas.usuario_id = usuarios.id
+            WHERE entradas.id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$this->id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

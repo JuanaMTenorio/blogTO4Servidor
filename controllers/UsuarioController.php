@@ -1,52 +1,82 @@
 <?php
 
-//Iniciamos sesión para poder guardar datos del usuario
-session_start();
-//Incluimos el modelo Usuario
-require_once "models/Usuario.php";
+require_once __DIR__ . "/../models/Usuario.php";
 
-//Creamos la clase controlador
-class UsuarioController{
-    // MÉTODO login()
-    //Este método muestra el formulario de login
-    //y procesa la autenticación cuando el formulario se envía
-    public function login(){
-        //Si el formulario se ha enviado (POST)
+class UsuarioController
+{
+    //MÉTODO LOGIN
+    public function login()
+    {
+        //Si el formulario se ha enviado
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             //Recogemos los datos del formulario
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
 
-            //Creamos el objeto Usuario
+            //Creamos un objeto Usuario
             $usuario = new Usuario();
 
-            //Asignamos los datos recibidos
+            //Asignamos email y password al objeto
             $usuario->setEmail($email);
             $usuario->setPassword($password);
 
-            //Llamamos al método login() del modelo
+            //Llamamos al método login del modelo
             $resultado = $usuario->login();
 
-            //Si el usuario existe en la base de datos
+            //Si existe el usuario, creamos sesión y redirigimos al panel
             if ($resultado) {
-
-                //Guardamos los datos en la sesión
                 $_SESSION['usuario'] = $resultado['id'];
                 $_SESSION['nick'] = $resultado['nick'];
-                $_SESSION['perfil'] = $resultado['perfil'];
+                $_SESSION['rol'] = $resultado['rol'];
 
-                //Redirigimos a la página principal
-                header("Location: index.php");
+                header("Location: panel.php");
                 exit();
             } else {
-
-                //Si no existe el usuario
                 echo "Email o contraseña incorrectos";
             }
         }
 
-        //Mostramos la vista del formulario
-        require_once "views/usuarios/login.php";
+        //Mostramos la vista del login
+        require_once __DIR__ . "/../views/usuarios/login.php";
+    }
+
+    //MÉTODO CREAR
+    public function crear()
+    {
+        require_once __DIR__ . "/../views/usuarios/crear.php";
+    }
+
+    //MÉTODO GUARDAR
+    public function guardar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $nick = trim($_POST['nick']);
+            $nombre = trim($_POST['nombre']);
+            $apellidos = trim($_POST['apellidos']);
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
+            $imagen_avatar = trim($_POST['imagen_avatar']);
+            $rol = trim($_POST['rol'] ?? '');
+            $usuario = new Usuario();
+
+            $usuario->setNick(htmlspecialchars($nick));
+            $usuario->setNombre(htmlspecialchars($nombre));
+            $usuario->setApellidos(htmlspecialchars($apellidos));
+            $usuario->setEmail(htmlspecialchars($email));
+            $usuario->setPassword($password);
+            $usuario->setImagenAvatar(htmlspecialchars($imagen_avatar));
+            $usuario->setRol(htmlspecialchars($rol));
+
+            $resultado = $usuario->guardar();
+
+            if ($resultado) {
+                header("Location: panel.php");
+                exit();
+            } else {
+                echo "Error al crear usuario";
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 //Incluimos la case Database para poder usar la conexión PDO
-require_once "config/Database.php";
+require_once __DIR__ . "/../config/Database.php";
 
 //Creo la clase Usario
 class Usuario
@@ -101,7 +101,8 @@ class Usuario
     {
         //CREO LA CONSULTA SQL CON MARCADORES DE POSICION(?)
         //ASI EVITO INYECCION SQL MALA
-        $sql = "INSERT INTO usuarios(nick,nombre,apellidos,email,password, rol VALUES(?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO usuarios (nick, nombre, apellidos, email, password, imagen_avatar, rol)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
         //PREPARO LA CONSULTA
         $stmt = $this->conn->prepare($sql);
         //EJECUTO LA CONSULTA Y PASO LOS VALORES EN EL MISMO ORDEN
@@ -120,7 +121,7 @@ class Usuario
 
     // MÉTODO login()
     //Este método comprueba si el usuario existe en la base de datos
-    //Si existe devuelve true y si no, false.
+    //Si existe devuelve true y si no, false
     //usando el email y la contraseña
     public function login()
     {

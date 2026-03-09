@@ -1,7 +1,7 @@
 <?php
 
 //Incluyo la clase Database para poder usar la conexión PDO
-require_once "config/Database.php";
+require_once __DIR__ . "/../config/Database.php";
 
 //Creo la clase Categoria
 class Categoria
@@ -74,5 +74,15 @@ class Categoria
 
         //Devolvemos la categoría encontrada
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    //METODO GUARDAR EN LA BD
+    public function guardar()
+    {
+        $sql = "INSERT INTO categorias (nombre) VALUES (?)";
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([$this->nombre]);
     }
 }

@@ -7,7 +7,7 @@ body {
 
 /* Contenedor central */
 main {
-    width: 800px;
+    width: 1000px;
     margin: 40px auto;
     background-color: white;
     padding: 20px;
@@ -55,6 +55,9 @@ footer {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+
+
+
 /* TITULO */
 .login-container h2 {
     text-align: center;
@@ -79,4 +82,12 @@ footer {
     color: white;
     border: none;
     cursor: pointer;
+}
+
+.detalle-descripcion {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    text-align: left;
 }

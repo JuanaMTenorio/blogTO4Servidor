@@ -14,6 +14,5 @@
     </header>
     <nav>
         <a href="index.php">Inicio</a>
-        <a href="#">Artículos</a>
     </nav>
     <main>
