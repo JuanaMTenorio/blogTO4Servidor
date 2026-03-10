@@ -14,7 +14,11 @@
         <tr>
             <td><?php echo htmlspecialchars($entrada['titulo'] ?? ''); ?></td>
             <td><?php echo htmlspecialchars($entrada['categoria_nombre'] ?? ''); ?></td>
-            <td><?php echo htmlspecialchars($entrada['imagen'] ?? ''); ?></td>
+            <td>
+                <?php if (!empty($entrada['imagen'])): ?>
+                    <img src="images/<?php echo htmlspecialchars($entrada['imagen']); ?>" width="100">
+                <?php endif; ?>
+            </td>
             <td><?php echo htmlspecialchars($entrada['descripcion'] ?? ''); ?></td>
             <td><?php echo htmlspecialchars($entrada['fecha'] ?? ''); ?></td>
             <td>
@@ -22,7 +26,7 @@
                     <a href="panel.php?controller=entrada&action=editar&id=<?php echo $entrada['id']; ?>">Editar</a>
 
                     <a href="panel.php?controller=entrada&action=eliminar&id=<?php echo $entrada['id']; ?>"
-                       onclick="return confirm('¿Seguro que quieres eliminar esta entrada?');">Eliminar</a>
+                        onclick="return confirm('¿Seguro que quieres eliminar esta entrada?');">Eliminar</a>
                 <?php endif; ?>
 
                 <a href="panel.php?controller=entrada&action=detalle&id=<?php echo $entrada['id']; ?>">Detalle</a>
@@ -30,3 +34,16 @@
         </tr>
     <?php endforeach; ?>
 </table>
+<br>
+
+<div class="paginacion">
+
+<?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+
+    <a href="panel.php?controller=entrada&action=listar&pagina=<?php echo $i; ?>">
+        <?php echo $i; ?>
+    </a>
+
+<?php endfor; ?>
+
+</div>

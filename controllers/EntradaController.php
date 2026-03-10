@@ -27,22 +27,30 @@ class EntradaController
     //MÉTODO GUARDAR
     public function guardar()
     {
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $categoria_id = trim($_POST['categoria_id'] ?? '');
             $titulo = trim($_POST['titulo'] ?? '');
-            $imagen = trim($_POST['imagen'] ?? '');
             $descripcion = trim($_POST['descripcion'] ?? '');
+
+            $nombreImagen = '';
+
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+                $nombreImagen = time() . "_" . basename($_FILES['imagen']['name']);
+                $rutaDestino = __DIR__ . "/../images/" . $nombreImagen;
+
+                move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino);
+            }
 
             $entrada = new Entrada();
 
-            //El usuario_id sale de la sesión
             $entrada->setUsuarioId($_SESSION['usuario']);
-            $entrada->setCategoriaId(htmlspecialchars($categoria_id));
+            $entrada->setCategoriaId($categoria_id);
             $entrada->setTitulo(htmlspecialchars($titulo));
-            $entrada->setImagen(htmlspecialchars($imagen));
-            $entrada->setDescripcion(htmlspecialchars($descripcion));
+            $entrada->setImagen($nombreImagen);
+            //Cambio para usar CKEditor
+            //$entrada->setDescripcion(htmlspecialchars($descripcion));
+            $entrada->setDescripcion($descripcion);
 
             $resultado = $entrada->guardar();
 
@@ -58,11 +66,26 @@ class EntradaController
     public function listar()
     {
         $entrada = new Entrada();
-        $entradas = $entrada->obtenerTodas();
+
+        $limite = 5;
+
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+
+        if ($pagina < 1) {
+            $pagina = 1;
+        }
+
+        $inicio = ($pagina - 1) * $limite;
+
+        $entradas = $entrada->obtenerPaginadas($inicio, $limite);
+
+        $totalEntradas = $entrada->contarEntradas();
+
+        $totalPaginas = ceil($totalEntradas / $limite);
 
         require_once __DIR__ . "/../views/entradas/listar.php";
     }
-    
+
     //METODO EDITAR
     public function editar()
     {
@@ -100,10 +123,9 @@ class EntradaController
             $id = trim($_POST['id'] ?? '');
             $categoria_id = trim($_POST['categoria_id'] ?? '');
             $titulo = trim($_POST['titulo'] ?? '');
-            $imagen = trim($_POST['imagen'] ?? '');
             $descripcion = trim($_POST['descripcion'] ?? '');
+            $imagenActual = trim($_POST['imagen_actual'] ?? '');
 
-            //COMPROBAR DE QUIÉN ES LA ENTRADA
             $entrada = new Entrada();
             $entrada->setId($id);
 
@@ -114,17 +136,26 @@ class EntradaController
                 exit();
             }
 
-            //CONTROL DE PERMISOS
             if ($_SESSION['rol'] != 'admin' && $datosEntrada['usuario_id'] != $_SESSION['usuario']) {
                 echo "No tienes permiso para actualizar esta entrada";
                 exit();
             }
 
+            $nombreImagen = $imagenActual;
+
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+                $nombreImagen = time() . "_" . basename($_FILES['imagen']['name']);
+                $rutaDestino = __DIR__ . "/../images/" . $nombreImagen;
+
+                move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino);
+            }
+
             $entrada->setCategoriaId($categoria_id);
             $entrada->setTitulo(htmlspecialchars($titulo));
-            $entrada->setImagen(htmlspecialchars($imagen));
-            $entrada->setDescripcion(htmlspecialchars($descripcion));
-
+            $entrada->setImagen($nombreImagen);
+            //$entrada->setDescripcion(htmlspecialchars($descripcion));
+            $entrada->setDescripcion($descripcion);
+            
             $resultado = $entrada->actualizar();
 
             if ($resultado) {

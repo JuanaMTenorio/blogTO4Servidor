@@ -28,18 +28,22 @@
         <br><br>
 
         <label for="imagen">Imagen:</label>
-        <input type="text" name="imagen" id="imagen"
+        <input type="file" name="imagen" id="imagen"
             value="<?php echo htmlspecialchars($datosEntrada['imagen']); ?>">
 
         <br><br>
 
         <label for="descripcion">Descripción:</label>
-        <textarea name="descripcion" id="descripcion" rows="6" required><?php echo htmlspecialchars($datosEntrada['descripcion']); ?></textarea>
-
+        <textarea name="descripcion" id="descripcion" rows="6" required>
+        <?php echo htmlspecialchars($datosEntrada['descripcion']); ?>
+        </textarea>
         <br><br>
 
         <input type="submit" value="Actualizar entrada">
 
     </form>
-
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+    CKEDITOR.replace('descripcion');
+    </script>
 </div>

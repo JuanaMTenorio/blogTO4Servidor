@@ -198,4 +198,38 @@ class Entrada
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    //METODO PARA CONTAR ENTRADAS
+    public function contarEntradas()
+    {
+        $sql = "SELECT COUNT(*) as total FROM entradas";
+        $stmt = $this->conn->query($sql);
+        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $fila['total'];
+    }
+    //METODO PARA OBTENER ENTRADAS PAGINADAS
+    public function obtenerPaginadas($inicio, $limite)
+    {
+        $sql = "SELECT 
+                entradas.id,
+                entradas.usuario_id,
+                entradas.titulo,
+                entradas.imagen,
+                entradas.descripcion,
+                entradas.fecha,
+                categorias.nombre AS categoria_nombre
+            FROM entradas
+            INNER JOIN categorias ON entradas.categoria_id = categorias.id
+            ORDER BY entradas.fecha DESC
+            LIMIT ?, ?";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(1, (int)$inicio, PDO::PARAM_INT);
+        $stmt->bindValue(2, (int)$limite, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
